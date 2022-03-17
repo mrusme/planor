@@ -1,11 +1,13 @@
 package main
 
 import (
-  "fmt"
   "flag"
+  "io/ioutil"
+  "log"
   "os"
 
-  "github.com/mrusme/planor/nori"
+  "github.com/mrusme/planor/ui"
+  tea "github.com/charmbracelet/bubbletea"
 )
 
 func main() {
@@ -21,12 +23,20 @@ func main() {
     os.Exit(1)
   }
 
-  cloud, err := nori.New(&cloudProvider, &cloudProfile)
+  // cloud, err := nori.New(&cloudProvider, &cloudProfile)
+  // if err != nil {
+  //   panic(err)
+  // }
+
+  log.SetOutput(ioutil.Discard)
+
+  tui := tea.NewProgram(ui.NewModel(), tea.WithAltScreen())
+  err := tui.Start()
   if err != nil {
     panic(err)
   }
 
-  bla, err := cloud.ListPipelines()
-  fmt.Printf("%v\n\n%v", bla, err)
+  // bla, err := cloud.ListPipelines()
+  // fmt.Printf("%v\n\n%v", bla, err)
 }
 

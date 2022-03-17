@@ -3,7 +3,7 @@ package nori
 import (
   "errors"
   "github.com/mrusme/planor/nori/models"
-	"github.com/mrusme/planor/nori/amazon"
+  "github.com/mrusme/planor/nori/amazon"
 )
 
 type Nor interface {

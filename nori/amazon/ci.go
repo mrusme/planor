@@ -1,12 +1,12 @@
 package amazon
 
 import (
-	"context"
+  "context"
 
-	"github.com/mrusme/planor/nori/models"
+  "github.com/mrusme/planor/nori/models"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/codepipeline"
+  "github.com/aws/aws-sdk-go-v2/aws"
+  "github.com/aws/aws-sdk-go-v2/service/codepipeline"
 )
 
 func (cloud *Amazon) ListPipelines() ([]models.Pipeline, error) {
