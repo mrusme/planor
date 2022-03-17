@@ -2,12 +2,13 @@ package main
 
 import (
   "flag"
-  "io/ioutil"
-  "log"
+  // "io/ioutil"
+  // "log"
   "os"
 
   "github.com/mrusme/planor/nori"
   "github.com/mrusme/planor/ui"
+  "github.com/mrusme/planor/ui/uictx"
   tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -29,9 +30,11 @@ func main() {
     panic(err)
   }
 
-  log.SetOutput(ioutil.Discard)
+  ctx := uictx.New(&cloud)
 
-  tui := tea.NewProgram(ui.NewModel(&cloud), tea.WithAltScreen())
+  // log.SetOutput(ioutil.Discard)
+
+  tui := tea.NewProgram(ui.NewModel(&ctx), tea.WithAltScreen())
   err = tui.Start()
   if err != nil {
     panic(err)

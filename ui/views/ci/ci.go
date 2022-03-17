@@ -8,8 +8,6 @@ import (
 )
 
 var (
-  appStyle = lipgloss.NewStyle().Padding(1, 2)
-
   titleStyle = lipgloss.NewStyle().
     Foreground(lipgloss.Color("#FFFDF5")).
     Background(lipgloss.Color("#25A065")).
@@ -33,12 +31,12 @@ func (m Model) Init() tea.Cmd {
 func NewModel(ctx *uictx.Ctx) (Model) {
   m := Model{}
 
-  pipelines, err :=  (*ctx.Cloud).ListPipelines()
-  if err == nil {
-    for _, pipeline := range pipelines {
-      m.items = append(m.items, pipeline)
-    }
-  }
+  // pipelines, err :=  (*ctx.Cloud).ListPipelines()
+  // if err == nil {
+  //   for _, pipeline := range pipelines {
+  //     m.items = append(m.items, pipeline)
+  //   }
+  // }
 
   m.list = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
   m.list.Title = "Pipelines"
@@ -48,12 +46,11 @@ func NewModel(ctx *uictx.Ctx) (Model) {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-  switch msg := msg.(type) {
+  switch msg.(type) {
   case tea.WindowSizeMsg:
-    topGap, rightGap, bottomGap, leftGap := appStyle.GetPadding()
     m.list.SetSize(
-      msg.Width - leftGap - rightGap,
-      msg.Height - topGap - bottomGap,
+      m.ctx.Content[0],
+      m.ctx.Content[1],
     )
   }
 

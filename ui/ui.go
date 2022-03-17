@@ -2,7 +2,6 @@ package ui
 
 import (
   "strings"
-  "github.com/mrusme/planor/nori"
   "github.com/mrusme/planor/ui/navigation"
   "github.com/mrusme/planor/ui/uictx"
 
@@ -39,23 +38,22 @@ type Model struct {
   keymap        KeyMap
   nav           navigation.Model
   views         []views.View
-  ctx           uictx.Ctx
+  ctx           *uictx.Ctx
 }
 
-func NewModel(cloud *nori.Nor) Model {
+func NewModel(ctx *uictx.Ctx) Model {
   m := Model{
     keymap:        DefaultKeyMap,
-    ctx:           uictx.New(cloud),
+    ctx:           ctx,
   }
 
-  m.nav = navigation.NewModel(&m.ctx)
-  m.views = append(m.views, ci.NewModel(&m.ctx))
+  m.nav = navigation.NewModel(m.ctx)
+  m.views = append(m.views, ci.NewModel(m.ctx))
 
   return m
 }
 
 func (m Model) Init() tea.Cmd {
-
   return tea.Batch(tea.EnterAltScreen)
 }
 
@@ -70,7 +68,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     }
 
   case tea.WindowSizeMsg:
-    m.onWindowSizeMsg(msg)
+    m.setSizes(msg.Width, msg.Height)
   }
 
   v, cmd := m.views[0].Update(msg)
@@ -88,8 +86,9 @@ func (m Model) View() (string) {
   return s.String()
 }
 
-func (m *Model) onWindowSizeMsg(msg tea.WindowSizeMsg) {
-  m.ctx.Screen[0] = msg.Width
-  m.ctx.Screen[1] = msg.Height
+func (m Model) setSizes(winWidth int, winHeight int) {
+  (*m.ctx).Screen[0] = winWidth
+  (*m.ctx).Screen[1] = winHeight
+  m.ctx.Content[0] = m.ctx.Screen[0]
+  m.ctx.Content[1] = m.ctx.Screen[1] - 4
 }
-
