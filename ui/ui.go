@@ -1,18 +1,16 @@
 package ui
 
 import (
-	"strings"
+  "strings"
+  "github.com/mrusme/planor/nori"
+  "github.com/mrusme/planor/ui/navigation"
+  "github.com/mrusme/planor/ui/uictx"
 
-	"github.com/mrusme/planor/nori"
-	"github.com/mrusme/planor/ui/navigation"
-	"github.com/mrusme/planor/ui/uictx"
+  "github.com/mrusme/planor/ui/views"
+  "github.com/mrusme/planor/ui/views/ci"
 
-	"github.com/mrusme/planor/ui/views"
-	"github.com/mrusme/planor/ui/views/ci"
-
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+  "github.com/charmbracelet/bubbles/key"
+  tea "github.com/charmbracelet/bubbletea"
 )
 
 type KeyMap struct {
@@ -47,10 +45,10 @@ type Model struct {
 func NewModel(cloud *nori.Nor) Model {
   m := Model{
     keymap:        DefaultKeyMap,
-    nav:           navigation.NewModel(),
     ctx:           uictx.New(cloud),
   }
 
+  m.nav = navigation.NewModel(&m.ctx)
   m.views = append(m.views, ci.NewModel(&m.ctx))
 
   return m
@@ -62,42 +60,36 @@ func (m Model) Init() tea.Cmd {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-  var (
-    cmd        tea.Cmd
-    cmds       []tea.Cmd
-  )
+  cmds := make([]tea.Cmd, 0)
 
   switch msg := msg.(type) {
   case tea.KeyMsg:
     switch {
     case key.Matches(msg, m.keymap.Quit):
-      cmd = tea.Quit
+      return m, tea.Quit
     }
 
   case tea.WindowSizeMsg:
     m.onWindowSizeMsg(msg)
   }
 
+  v, cmd := m.views[0].Update(msg)
+  m.views[0] = v
+
   cmds = append(cmds, cmd)
+
   return m, tea.Batch(cmds...)
 }
 
 func (m Model) View() (string) {
   s := strings.Builder{}
-  s.WriteString(m.nav.View(m.ctx))
-  s.WriteString("\n")
-  mainContent := lipgloss.JoinHorizontal(
-    lipgloss.Top,
-    m.views[0].View(),
-    // TODO: Content
-  )
-  s.WriteString(mainContent)
+  s.WriteString(m.nav.View() + "\n\n")
+  s.WriteString(m.views[0].View())
   return s.String()
 }
 
 func (m *Model) onWindowSizeMsg(msg tea.WindowSizeMsg) {
   m.ctx.Screen[0] = msg.Width
   m.ctx.Screen[1] = msg.Height
-  m.ctx.Content[1] = msg.Height - 1
 }
 

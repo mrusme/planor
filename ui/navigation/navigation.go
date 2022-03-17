@@ -12,10 +12,6 @@ import (
 var (
   highlight = lipgloss.AdaptiveColor{Light: "#874BFD", Dark: "#7D56F4"}
 
-  tabsBorderHeight  = 1
-  tabsContentHeight = 2
-  TabsHeight        = tabsBorderHeight + tabsContentHeight
-
   activeTabBorder = lipgloss.Border{
     Top:         "─",
     Bottom:      " ",
@@ -57,11 +53,13 @@ var Navigation = []string{
 
 type Model struct {
   CurrentId             int
+  ctx                   *uictx.Ctx
 }
 
-func NewModel() Model {
+func NewModel(ctx *uictx.Ctx) Model {
   return Model{
     CurrentId: 0,
+    ctx: ctx,
   }
 }
 
@@ -69,7 +67,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
   return m, nil
 }
 
-func (m Model) View(ctx uictx.Ctx) string {
+func (m Model) View() string {
   var items []string
 
   for i, nav := range Navigation {
@@ -80,10 +78,13 @@ func (m Model) View(ctx uictx.Ctx) string {
     }
   }
 
-  row := lipgloss.JoinHorizontal(lipgloss.Top, items...)
-  gap := tabGap.Render(strings.Repeat(" ", max(0, ctx.Screen[0] - lipgloss.Width(row) - 2)))
-
-  return lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
+  row := lipgloss.JoinHorizontal(
+    lipgloss.Top,
+    items...
+  )
+  gap := tabGap.Render(strings.Repeat(" ", max(0, m.ctx.Screen[0] - lipgloss.Width(row) - 2)))
+  row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
+  return lipgloss.JoinHorizontal(lipgloss.Top, row, "\n\n")
 }
 
 func max(a, b int) int {
