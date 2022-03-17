@@ -17,3 +17,7 @@ type Pipeline struct {
   Error           error
 }
 
+func (pipeline Pipeline) FilterValue() (string) {
+  return pipeline.Name
+}
+

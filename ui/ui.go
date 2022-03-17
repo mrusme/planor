@@ -1,14 +1,18 @@
 package ui
 
 import (
-  "strings"
+	"strings"
 
-  "github.com/mrusme/planor/ui/uictx"
-  "github.com/mrusme/planor/ui/navigation"
+	"github.com/mrusme/planor/nori"
+	"github.com/mrusme/planor/ui/navigation"
+	"github.com/mrusme/planor/ui/uictx"
 
-  "github.com/charmbracelet/bubbles/key"
-  tea "github.com/charmbracelet/bubbletea"
-  "github.com/charmbracelet/lipgloss"
+	"github.com/mrusme/planor/ui/views"
+	"github.com/mrusme/planor/ui/views/ci"
+
+	"github.com/charmbracelet/bubbles/key"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type KeyMap struct {
@@ -36,25 +40,30 @@ var DefaultKeyMap = KeyMap{
 type Model struct {
   keymap        KeyMap
   nav           navigation.Model
+  views         []views.View
   ctx           uictx.Ctx
 }
 
-func NewModel() Model {
-  return Model{
+func NewModel(cloud *nori.Nor) Model {
+  m := Model{
     keymap:        DefaultKeyMap,
     nav:           navigation.NewModel(),
+    ctx:           uictx.New(cloud),
   }
+
+  m.views = append(m.views, ci.NewModel(&m.ctx))
+
+  return m
 }
 
 func (m Model) Init() tea.Cmd {
+
   return tea.Batch(tea.EnterAltScreen)
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
   var (
     cmd        tea.Cmd
-    sidebarCmd tea.Cmd
-    helpCmd    tea.Cmd
     cmds       []tea.Cmd
   )
 
@@ -69,7 +78,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     m.onWindowSizeMsg(msg)
   }
 
-  cmds = append(cmds, cmd, sidebarCmd, helpCmd)
+  cmds = append(cmds, cmd)
   return m, tea.Batch(cmds...)
 }
 
@@ -79,6 +88,7 @@ func (m Model) View() (string) {
   s.WriteString("\n")
   mainContent := lipgloss.JoinHorizontal(
     lipgloss.Top,
+    m.views[0].View(),
     // TODO: Content
   )
   s.WriteString(mainContent)

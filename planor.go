@@ -6,6 +6,7 @@ import (
   "log"
   "os"
 
+  "github.com/mrusme/planor/nori"
   "github.com/mrusme/planor/ui"
   tea "github.com/charmbracelet/bubbletea"
 )
@@ -23,20 +24,18 @@ func main() {
     os.Exit(1)
   }
 
-  // cloud, err := nori.New(&cloudProvider, &cloudProfile)
-  // if err != nil {
-  //   panic(err)
-  // }
-
-  log.SetOutput(ioutil.Discard)
-
-  tui := tea.NewProgram(ui.NewModel(), tea.WithAltScreen())
-  err := tui.Start()
+  cloud, err := nori.New(&cloudProvider, &cloudProfile)
   if err != nil {
     panic(err)
   }
 
-  // bla, err := cloud.ListPipelines()
-  // fmt.Printf("%v\n\n%v", bla, err)
+  log.SetOutput(ioutil.Discard)
+
+  tui := tea.NewProgram(ui.NewModel(&cloud), tea.WithAltScreen())
+  err = tui.Start()
+  if err != nil {
+    panic(err)
+  }
+
 }
 
