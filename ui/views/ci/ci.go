@@ -14,12 +14,21 @@ import (
 )
 
 var (
-  viewportStyle = lipgloss.NewStyle().Margin(0, 0, 0, 0)
+  viewportStyle = lipgloss.NewStyle().
+    Margin(0, 0, 0, 0).
+    Padding(1, 1).
+    Border(lipgloss.RoundedBorder()).
+    BorderForeground(lipgloss.Color("#874BFD")).
+    BorderTop(true).
+    BorderLeft(true).
+    BorderRight(true).
+    BorderBottom(true)
 )
 
 type KeyMap struct {
     Refresh       key.Binding
     Select        key.Binding
+    SwitchFocus   key.Binding
 }
 
 var DefaultKeyMap = KeyMap{
@@ -31,6 +40,10 @@ var DefaultKeyMap = KeyMap{
     key.WithKeys("enter"),
     key.WithHelp("enter", "select"),
   ),
+  SwitchFocus: key.NewBinding(
+    key.WithKeys("tab"),
+    key.WithHelp("tab", "switch focus"),
+  ),
 }
 
 type Model struct {
@@ -40,7 +53,8 @@ type Model struct {
   viewport        viewport.Model
   ctx             *uictx.Ctx
 
-  refreshing      bool
+  focused         int
+  focusables      [2]tea.Model
 }
 
 func (m Model) Init() tea.Cmd {
@@ -50,7 +64,11 @@ func (m Model) Init() tea.Cmd {
 func NewModel(ctx *uictx.Ctx) (Model) {
   m := Model{
     keymap:        DefaultKeyMap,
+    focused:       0,
   }
+
+  // m.focusables = append(m.focusables, m.list)
+  // m.focusables = append(m.focusables, m.viewport)
 
   m.list = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
   m.list.Title = "Pipelines"
@@ -69,6 +87,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       m.ctx.Loading = true
       cmds = append(cmds, m.refresh())
 
+    case key.Matches(msg, m.keymap.SwitchFocus):
+      m.focused++
+      if m.focused >= len(m.focusables) {
+        m.focused = 0
+      }
+      // return m, nil
+
     case key.Matches(msg, m.keymap.Select):
       i, ok := m.list.SelectedItem().(models.Pipeline)
       if ok {
@@ -82,9 +107,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       int(math.Floor(float64(m.ctx.Content[0]) / 3.0)),
       m.ctx.Content[1],
     )
-    m.viewport.Width = int(math.Ceil(float64(m.ctx.Content[0]) / 3.0 * 2.0))
-    m.viewport.Height = m.ctx.Content[1]
-    cmds = append(cmds, viewport.Sync(m.viewport))
+    m.viewport.Width = int(math.Ceil(float64(m.ctx.Content[0]) / 3.0 * 2.0)) - 4
+    m.viewport.Height = m.ctx.Content[1] - 5
+    // cmds = append(cmds, viewport.Sync(m.viewport))
 
   case []list.Item:
     m.items = msg
@@ -93,11 +118,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
   }
 
   var cmd tea.Cmd
-  m.list, cmd = m.list.Update(msg)
-  cmds = append(cmds, cmd)
 
-  m.viewport, cmd = m.viewport.Update(msg)
-  cmds = append(cmds, cmd)
+  if m.focused == 0 {
+    viewportStyle.BorderForeground(lipgloss.Color("#874BFD"))
+    m.list, cmd = m.list.Update(msg)
+    cmds = append(cmds, cmd)
+  } else if m.focused == 1 {
+    viewportStyle.BorderForeground(lipgloss.Color("#FFFFFF"))
+    m.viewport, cmd = m.viewport.Update(msg)
+    cmds = append(cmds, cmd)
+  }
 
   return m, tea.Batch(cmds...)
 }
@@ -108,7 +138,7 @@ func (m Model) View() (string) {
   view = lipgloss.JoinHorizontal(
     lipgloss.Top,
     m.list.View(),
-    m.viewport.View(),
+    viewportStyle.Render(m.viewport.View()),
   )
 
   return view
@@ -165,5 +195,5 @@ func (m *Model) renderViewport(pipeline *models.Pipeline) (string) {
     }
   }
 
-  return viewportStyle.Render(vp)
+  return vp
 }
