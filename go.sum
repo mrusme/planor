@@ -16,6 +16,8 @@ github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.0 h1:bt3zw79tm209glISdMR
 github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.0/go.mod h1:viTrxhAuejD+LszDahzAE2x40YjYWhMqzHxv2ZiWaME=
 github.com/aws/aws-sdk-go-v2/internal/ini v1.3.7 h1:QOMEP8jnO8sm0SX/4G7dbaIq2eEP2wcWEsF0jzrXLJc=
 github.com/aws/aws-sdk-go-v2/internal/ini v1.3.7/go.mod h1:P5sjYYf2nc5dE6cZIzEMsVtq6XeLD7c4rM+kQJPrByA=
+github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.1 h1:HPXBoSBZ/AkcbghlrbfpllzeXfrtS/j3f0mDmbPMEdU=
+github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.1/go.mod h1:tHNjgOBStmkKimX5aJtMIT7PL+Nf7/y0R+CGqbJx864=
 github.com/aws/aws-sdk-go-v2/service/codepipeline v1.13.0 h1:H0L6Pzecb+uFjRpxn7+NAufYVDVjLvt2fhLxhE/ABqA=
 github.com/aws/aws-sdk-go-v2/service/codepipeline v1.13.0/go.mod h1:zzN2pgcva9apcalJQvlRE/s6lkXr4PhSqcV0wf75PW8=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.0 h1:YQ3fTXACo7xeAqg0NiqcCmBOXJruUfh+4+O2qxF2EjQ=

@@ -50,6 +50,7 @@ var (
 
 var Navigation = []string{
   "CI",
+  "Logs",
 }
 
 type Model struct {
@@ -125,3 +126,20 @@ func max(a, b int) int {
   }
   return b
 }
+
+func (m *Model) PrevTab() {
+  m.CurrentId--
+
+  if m.CurrentId < 0 {
+    m.CurrentId = len(Navigation) - 1
+  }
+}
+
+func (m *Model) NextTab() {
+  m.CurrentId++
+
+  if m.CurrentId >= len(Navigation) {
+    m.CurrentId = 0
+  }
+}
+

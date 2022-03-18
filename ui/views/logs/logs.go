@@ -1,4 +1,4 @@
-package ci
+package logs
 
 import (
   "fmt"
@@ -48,7 +48,7 @@ var DefaultKeyMap = KeyMap{
 
 type Model struct {
   keymap          KeyMap
-  list            list.Model
+  listGroups      list.Model
   items           []list.Item
   viewport        viewport.Model
   ctx             *uictx.Ctx
@@ -67,11 +67,8 @@ func NewModel(ctx *uictx.Ctx) (Model) {
     focused:       0,
   }
 
-  // m.focusables = append(m.focusables, m.list)
-  // m.focusables = append(m.focusables, m.viewport)
-
-  m.list = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
-  m.list.Title = "Pipelines"
+  m.listGroups = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
+  m.listGroups.Title = "Groups"
   m.ctx = ctx
 
   return m
@@ -95,20 +92,24 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       // return m, nil
 
     case key.Matches(msg, m.keymap.Select):
-      i, ok := m.list.SelectedItem().(models.Pipeline)
+      group, ok := m.listGroups.SelectedItem().(models.LogGroup)
       if ok {
-        m.viewport.SetContent(m.renderViewport(&i))
+        var items []list.Item
+        for _, stream := range group.Streams {
+          items = append(items, stream)
+        }
+        m.listGroups.SetItems(items)
         return m, nil
       }
     }
 
   case tea.WindowSizeMsg:
-    listWidth := int(math.Floor(float64(m.ctx.Content[0]) / 4.0))
-    viewportWidth := m.ctx.Content[0] - listWidth
+    listGroupsWidth := int(math.Floor(float64(m.ctx.Content[0]) / 4.0))
+    viewportWidth := m.ctx.Content[0] - listGroupsWidth
     viewportHeight := m.ctx.Content[1] - 6
 
-    m.list.SetSize(
-      listWidth,
+    m.listGroups.SetSize(
+      listGroupsWidth,
       m.ctx.Content[1],
     )
 
@@ -120,7 +121,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
   case []list.Item:
     m.items = msg
-    m.list.SetItems(m.items)
+    m.listGroups.SetItems(m.items)
     m.ctx.Loading = false
   }
 
@@ -128,7 +129,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
   if m.focused == 0 {
     viewportStyle.BorderForeground(lipgloss.Color("#874BFD"))
-    m.list, cmd = m.list.Update(msg)
+    m.listGroups, cmd = m.listGroups.Update(msg)
     cmds = append(cmds, cmd)
   } else if m.focused == 1 {
     viewportStyle.BorderForeground(lipgloss.Color("#FFFFFF"))
@@ -144,7 +145,7 @@ func (m Model) View() (string) {
 
   view = lipgloss.JoinHorizontal(
     lipgloss.Top,
-    m.list.View(),
+    m.listGroups.View(),
     viewportStyle.Render(m.viewport.View()),
   )
 
@@ -155,52 +156,53 @@ func (m *Model) refresh() (tea.Cmd) {
   return func () (tea.Msg) {
     var items []list.Item
 
-    pipelines, err :=  (*m.ctx.Cloud).ListPipelines()
+    logGroups, err :=  (*m.ctx.Cloud).ListLogGroups(true)
     if err != nil {
       fmt.Printf("%s", err) // TODO: Implement error message
     }
-    for _, pipeline := range pipelines {
-      items = append(items, pipeline)
+    for _, logGroup := range logGroups {
+      items = append(items, logGroup)
     }
 
     return items
   }
 }
 
-func (m *Model) renderViewport(pipeline *models.Pipeline) (string) {
-  var vp string = ""
-
-  vp = fmt.Sprintf(
-    "%s\n\nUpdated %s\n",
-    pipeline.Name,
-    pipeline.UpdatedAt.String(),
-  )
-
-  for _, stage := range pipeline.Stages {
-    vp = fmt.Sprintf(
-      "%s\n  %s\n  Status: %s\n",
-      vp,
-      stage.Name,
-      stage.Status,
-    )
-
-    for _, action := range stage.Actions {
-      prct := fmt.Sprintf("%d%%", action.PercentComplete)
-      if prct == "0%" {
-        prct = ""
-      }
-
-      vp = fmt.Sprintf(
-        "%s\n    %s\n    Updated: %s\n    Status: %s %s\n    %s\n",
-        vp,
-        action.Name,
-        action.UpdatedAt.String(),
-        action.Status,
-        prct,
-        action.Summary,
-      )
-    }
-  }
-
-  return vp
-}
+// func (m *Model) renderViewport(pipeline *models.Pipeline) (string) {
+//   var vp string = ""
+//
+//   vp = fmt.Sprintf(
+//     "%s\n\nUpdated %s\n",
+//     pipeline.Name,
+//     pipeline.UpdatedAt.String(),
+//   )
+//
+//   for _, stage := range pipeline.Stages {
+//     vp = fmt.Sprintf(
+//       "%s\n  %s\n  Status: %s\n",
+//       vp,
+//       stage.Name,
+//       stage.Status,
+//     )
+//
+//     for _, action := range stage.Actions {
+//       prct := fmt.Sprintf("%d%%", action.PercentComplete)
+//       if prct == "0%" {
+//         prct = ""
+//       }
+//
+//       vp = fmt.Sprintf(
+//         "%s\n    %s\n    Updated: %s\n    Status: %s %s\n    %s\n",
+//         vp,
+//         action.Name,
+//         action.UpdatedAt.String(),
+//         action.Status,
+//         prct,
+//         action.Summary,
+//       )
+//     }
+//   }
+//
+//   return vp
+// }
+//

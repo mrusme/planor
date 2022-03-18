@@ -9,6 +9,10 @@ import (
 type Nor interface {
   LoadProfile(profile *string) (error)
   ListPipelines() ([]models.Pipeline, error)
+
+  ListLogGroups(updateEvents bool) ([]models.LogGroup, error)
+  UpdateLogStreams(logGroup *models.LogGroup, updateEvents bool) (error)
+  UpdateLogEvents(logStream *models.LogStream) (error)
 }
 
 func New(cloud *string, profile *string) (Nor, error) {

@@ -6,11 +6,13 @@ import (
   "github.com/aws/aws-sdk-go-v2/aws"
   "github.com/aws/aws-sdk-go-v2/config"
   "github.com/aws/aws-sdk-go-v2/service/codepipeline"
+  "github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 )
 
 type Amazon struct {
   cfg           aws.Config
   cpc           *codepipeline.Client
+  cwl           *cloudwatchlogs.Client
 }
 
 func (cloud *Amazon) LoadProfile(profile *string) (error)  {
@@ -26,6 +28,7 @@ func (cloud *Amazon) LoadProfile(profile *string) (error)  {
 
 func (cloud *Amazon) LoadClients() (error) {
   cloud.cpc = codepipeline.NewFromConfig(cloud.cfg)
+  cloud.cwl = cloudwatchlogs.NewFromConfig(cloud.cfg)
   return nil
 }
 
