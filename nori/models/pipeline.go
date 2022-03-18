@@ -26,6 +26,10 @@ func (pipeline Pipeline) Title() (string) {
 }
 
 func (pipeline Pipeline) Description() (string) {
-  return pipeline.Stages[0].Status
+  if len(pipeline.Stages) > 0 {
+    return pipeline.Stages[0].Status
+  }
+
+  return "N/A"
 }
 

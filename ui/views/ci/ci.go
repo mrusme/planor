@@ -1,42 +1,50 @@
 package ci
 
 import (
-  "github.com/charmbracelet/bubbles/list"
-  tea "github.com/charmbracelet/bubbletea"
-  "github.com/charmbracelet/lipgloss"
-  "github.com/mrusme/planor/ui/uictx"
+	"fmt"
+
+	"github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+  "github.com/charmbracelet/bubbles/spinner"
+	"github.com/mrusme/planor/ui/uictx"
 )
 
-var (
-  titleStyle = lipgloss.NewStyle().
-    Foreground(lipgloss.Color("#FFFDF5")).
-    Background(lipgloss.Color("#25A065")).
-    Padding(0, 1)
+type KeyMap struct {
+    Refresh       key.Binding
+}
 
-  statusMessageStyle = lipgloss.NewStyle().
-    Foreground(lipgloss.AdaptiveColor{Light: "#04B575", Dark: "#04B575"}).
-    Render
-)
+var DefaultKeyMap = KeyMap{
+  Refresh: key.NewBinding(
+    key.WithKeys("r", "R"),
+    key.WithHelp("r/R", "refresh"),
+  ),
+}
 
 type Model struct {
+  keymap          KeyMap
   list            list.Model
   items           []list.Item
+  spinner         spinner.Model
   ctx             *uictx.Ctx
+
+  refreshing      bool
 }
 
 func (m Model) Init() tea.Cmd {
-  return nil
+  return m.spinner.Tick
 }
 
 func NewModel(ctx *uictx.Ctx) (Model) {
-  m := Model{}
+  m := Model{
+    keymap:        DefaultKeyMap,
+    refreshing:    false,
+  }
 
-  // pipelines, err :=  (*ctx.Cloud).ListPipelines()
-  // if err == nil {
-  //   for _, pipeline := range pipelines {
-  //     m.items = append(m.items, pipeline)
-  //   }
-  // }
+  m.spinner = spinner.New()
+  m.spinner.Spinner = spinner.Dot
+  m.spinner.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 
   m.list = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
   m.list.Title = "Pipelines"
@@ -46,22 +54,77 @@ func NewModel(ctx *uictx.Ctx) (Model) {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-  switch msg.(type) {
+  var cmds []tea.Cmd
+
+  switch msg := msg.(type) {
+  case tea.KeyMsg:
+    switch {
+    case key.Matches(msg, m.keymap.Refresh):
+      m.refreshing = true
+      cmds = append(cmds, m.refresh())
+    }
+
   case tea.WindowSizeMsg:
     m.list.SetSize(
       m.ctx.Content[0],
       m.ctx.Content[1],
     )
+
+  case spinner.TickMsg:
+    var cmd tea.Cmd
+    m.spinner, cmd = m.spinner.Update(msg)
+    cmds = append(cmds, cmd)
+    // return m, cmd
+
+  case []list.Item:
+    m.items = msg
+    m.list.SetItems(m.items)
+    m.refreshing = false
   }
 
   var cmd tea.Cmd
   m.list, cmd = m.list.Update(msg)
-  return m, cmd
+  cmds = append(cmds, cmd)
+
+  if m.refreshing == true {
+    cmds = append(cmds, m.spinner.Tick)
+  }
+
+  return m, tea.Batch(cmds...)
 }
 
 func (m Model) View() (string) {
-  view := lipgloss.JoinHorizontal(lipgloss.Top, m.list.View())
+  var view string
+
+  if m.refreshing == true {
+    view = lipgloss.JoinHorizontal(
+      lipgloss.Top,
+      m.list.View(),
+      m.spinner.View(),
+    )
+  } else {
+    view = lipgloss.JoinHorizontal(
+      lipgloss.Top,
+      m.list.View(),
+    )
+  }
 
   return view
+}
+
+func (m *Model) refresh() (tea.Cmd) {
+  return func () (tea.Msg) {
+    var items []list.Item
+
+    pipelines, err :=  (*m.ctx.Cloud).ListPipelines()
+    if err != nil {
+      fmt.Printf("%s", err) // TODO: Implement error message
+    }
+    for _, pipeline := range pipelines {
+      items = append(items, pipeline)
+    }
+
+    return items
+  }
 }
 
