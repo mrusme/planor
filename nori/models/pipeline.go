@@ -1,12 +1,22 @@
 package models
 
 import (
+  "time"
 )
+
+type PipelineStageAction struct {
+  Name            string
+  Status          string
+  Summary         string
+  PercentComplete int32
+  UpdatedAt       time.Time
+}
 
 type PipelineStage struct {
   ID              string
   Name            string
   Status          string
+  Actions         []PipelineStageAction
 }
 
 type Pipeline struct {
@@ -15,6 +25,8 @@ type Pipeline struct {
   Version         string
   Stages          []PipelineStage
   Error           error
+  CreatedAt       time.Time
+  UpdatedAt       time.Time
 }
 
 func (pipeline Pipeline) FilterValue() (string) {

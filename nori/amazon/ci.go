@@ -27,6 +27,9 @@ func (cloud *Amazon) ListPipelines() ([]models.Pipeline, error) {
       newPipeline := models.Pipeline{
         ID: *pipeline.Name,
         Name: *pipeline.Name,
+        Version: string(*pipeline.Version),
+        CreatedAt: *pipeline.Created,
+        UpdatedAt: *pipeline.Updated,
       }
 
       cloud.UpdatePipelineStatus(&newPipeline)
@@ -60,11 +63,33 @@ func (cloud *Amazon) UpdatePipelineStatus(pipeline *models.Pipeline) (error) {
 
   var stages []models.PipelineStage
   for _, stage := range state.StageStates {
-    stages = append(stages, models.PipelineStage{
+    var actions []models.PipelineStageAction
+    for _, action := range stage.ActionStates {
+      newAction := models.PipelineStageAction {
+        Name: *action.ActionName,
+        Status: string((*action.LatestExecution).Status),
+        UpdatedAt: *action.LatestExecution.LastStatusChange,
+      }
+
+      if action.LatestExecution.Summary != nil {
+        newAction.Summary = *action.LatestExecution.Summary
+      }
+
+      if action.LatestExecution.PercentComplete != nil {
+        newAction.PercentComplete = *action.LatestExecution.PercentComplete
+      }
+
+      actions = append(actions, newAction)
+    }
+
+    newStage := models.PipelineStage{
       ID: *stage.StageName,
       Name: *stage.StageName,
       Status: string((*stage.LatestExecution).Status),
-    })
+      Actions: actions,
+    }
+
+    stages = append(stages, newStage)
   }
 
   pipeline.Version = string(*state.PipelineVersion)
