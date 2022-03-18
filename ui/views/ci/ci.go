@@ -1,14 +1,13 @@
 package ci
 
 import (
-	"fmt"
+  "fmt"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-  "github.com/charmbracelet/bubbles/spinner"
-	"github.com/mrusme/planor/ui/uictx"
+  "github.com/charmbracelet/bubbles/key"
+  "github.com/charmbracelet/bubbles/list"
+  tea "github.com/charmbracelet/bubbletea"
+  "github.com/charmbracelet/lipgloss"
+  "github.com/mrusme/planor/ui/uictx"
 )
 
 type KeyMap struct {
@@ -26,25 +25,19 @@ type Model struct {
   keymap          KeyMap
   list            list.Model
   items           []list.Item
-  spinner         spinner.Model
   ctx             *uictx.Ctx
 
   refreshing      bool
 }
 
 func (m Model) Init() tea.Cmd {
-  return m.spinner.Tick
+  return nil
 }
 
 func NewModel(ctx *uictx.Ctx) (Model) {
   m := Model{
     keymap:        DefaultKeyMap,
-    refreshing:    false,
   }
-
-  m.spinner = spinner.New()
-  m.spinner.Spinner = spinner.Dot
-  m.spinner.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 
   m.list = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
   m.list.Title = "Pipelines"
@@ -60,7 +53,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
   case tea.KeyMsg:
     switch {
     case key.Matches(msg, m.keymap.Refresh):
-      m.refreshing = true
+      m.ctx.Loading = true
       cmds = append(cmds, m.refresh())
     }
 
@@ -70,25 +63,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       m.ctx.Content[1],
     )
 
-  case spinner.TickMsg:
-    var cmd tea.Cmd
-    m.spinner, cmd = m.spinner.Update(msg)
-    cmds = append(cmds, cmd)
-    // return m, cmd
-
   case []list.Item:
     m.items = msg
     m.list.SetItems(m.items)
-    m.refreshing = false
+    m.ctx.Loading = false
   }
 
   var cmd tea.Cmd
   m.list, cmd = m.list.Update(msg)
   cmds = append(cmds, cmd)
-
-  if m.refreshing == true {
-    cmds = append(cmds, m.spinner.Tick)
-  }
 
   return m, tea.Batch(cmds...)
 }
@@ -96,18 +79,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() (string) {
   var view string
 
-  if m.refreshing == true {
-    view = lipgloss.JoinHorizontal(
-      lipgloss.Top,
-      m.list.View(),
-      m.spinner.View(),
-    )
-  } else {
-    view = lipgloss.JoinHorizontal(
-      lipgloss.Top,
-      m.list.View(),
-    )
-  }
+  view = lipgloss.JoinHorizontal(
+    lipgloss.Top,
+    m.list.View(),
+  )
 
   return view
 }

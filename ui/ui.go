@@ -73,7 +73,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
   v, cmd := m.views[0].Update(msg)
   m.views[0] = v
+  cmds = append(cmds, cmd)
 
+  nav, cmd := m.nav.Update(msg)
+  m.nav = nav
   cmds = append(cmds, cmd)
 
   return m, tea.Batch(cmds...)
