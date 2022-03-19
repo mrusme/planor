@@ -99,6 +99,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
           items = append(items, stream)
         }
         m.listGroups.SetItems(items)
+        m.listGroups.Select(0)
+        return m, nil
+      }
+
+      stream, ok := m.listGroups.SelectedItem().(models.LogStream)
+      if ok {
+        m.viewport.SetContent(m.renderViewport(&stream))
         return m, nil
       }
     }
@@ -159,6 +166,7 @@ func (m *Model) refresh() (tea.Cmd) {
     logGroups, err :=  (*m.ctx.Cloud).ListLogGroups(true)
     if err != nil {
       fmt.Printf("%s", err) // TODO: Implement error message
+      return items
     }
     for _, logGroup := range logGroups {
       items = append(items, logGroup)
@@ -168,41 +176,17 @@ func (m *Model) refresh() (tea.Cmd) {
   }
 }
 
-// func (m *Model) renderViewport(pipeline *models.Pipeline) (string) {
-//   var vp string = ""
-//
-//   vp = fmt.Sprintf(
-//     "%s\n\nUpdated %s\n",
-//     pipeline.Name,
-//     pipeline.UpdatedAt.String(),
-//   )
-//
-//   for _, stage := range pipeline.Stages {
-//     vp = fmt.Sprintf(
-//       "%s\n  %s\n  Status: %s\n",
-//       vp,
-//       stage.Name,
-//       stage.Status,
-//     )
-//
-//     for _, action := range stage.Actions {
-//       prct := fmt.Sprintf("%d%%", action.PercentComplete)
-//       if prct == "0%" {
-//         prct = ""
-//       }
-//
-//       vp = fmt.Sprintf(
-//         "%s\n    %s\n    Updated: %s\n    Status: %s %s\n    %s\n",
-//         vp,
-//         action.Name,
-//         action.UpdatedAt.String(),
-//         action.Status,
-//         prct,
-//         action.Summary,
-//       )
-//     }
-//   }
-//
-//   return vp
-// }
-//
+func (m *Model) renderViewport(logStream *models.LogStream) (string) {
+  var vp string = ""
+
+  for _, event := range logStream.LogEvents {
+    vp = fmt.Sprintf(
+      "%s%s\n",
+      vp,
+      event.Message,
+    )
+  }
+
+  return vp
+}
+

@@ -14,6 +14,7 @@ type LogEvent struct {
 type LogStream struct {
   ID              string
   Name            string
+  GroupName       string
   CreatedAt       time.Time
   FirstEventAt    time.Time
   LastEventAt     time.Time

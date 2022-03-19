@@ -32,7 +32,10 @@ func (cloud *Amazon) ListLogGroups(updateEvents bool) ([]models.LogGroup, error)
         SizeBytes: *logGroup.StoredBytes,
       }
 
-      cloud.UpdateLogStreams(&newLogGroup, updateEvents)
+      err := cloud.UpdateLogStreams(&newLogGroup, updateEvents)
+      if err != nil {
+        return nil, err
+      }
 
       logGroups = append(logGroups, newLogGroup)
     }
@@ -49,7 +52,8 @@ func (cloud *Amazon) ListLogGroups(updateEvents bool) ([]models.LogGroup, error)
 
 func (cloud *Amazon) UpdateLogStreams(logGroup *models.LogGroup, updateEvents bool) (error) {
   input := cloudwatchlogs.DescribeLogStreamsInput{
-    Limit: aws.Int32(10),
+    LogGroupName: aws.String(logGroup.Name),
+    Limit: aws.Int32(2),
     NextToken: nil,
     Descending: aws.Bool(true),
     // OrderBy: https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs@v1.15.1/types#OrderBy
@@ -66,6 +70,7 @@ func (cloud *Amazon) UpdateLogStreams(logGroup *models.LogGroup, updateEvents bo
       newLogStream := models.LogStream{
         ID: *logStream.Arn,
         Name: *logStream.LogStreamName,
+        GroupName: logGroup.Name,
         CreatedAt: time.UnixMilli(*logStream.CreationTime),
         FirstEventAt: time.UnixMilli(*logStream.FirstEventTimestamp),
         LastEventAt: time.UnixMilli(*logStream.LastEventTimestamp),
@@ -73,16 +78,20 @@ func (cloud *Amazon) UpdateLogStreams(logGroup *models.LogGroup, updateEvents bo
       }
 
       if updateEvents == true {
-        cloud.UpdateLogEvents(&newLogStream)
+        err := cloud.UpdateLogEvents(&newLogStream)
+        if err != nil {
+          return err
+        }
       }
 
       logGroup.Streams = append(logGroup.Streams, newLogStream)
     }
 
-    input.NextToken = ret.NextToken
-    if input.NextToken == nil {
-      break
-    }
+    // input.NextToken = ret.NextToken
+    // if input.NextToken == nil {
+    //   break
+    // }
+    break
   }
 
 
@@ -91,7 +100,9 @@ func (cloud *Amazon) UpdateLogStreams(logGroup *models.LogGroup, updateEvents bo
 
 func (cloud *Amazon) UpdateLogEvents(logStream *models.LogStream) (error) {
   input := cloudwatchlogs.GetLogEventsInput{
-    Limit: aws.Int32(1000),
+    LogGroupName: aws.String(logStream.GroupName),
+    LogStreamName: aws.String(logStream.Name),
+    Limit: aws.Int32(100),
     NextToken: nil,
     StartFromHead: aws.Bool(false),
   }
@@ -112,10 +123,11 @@ func (cloud *Amazon) UpdateLogEvents(logStream *models.LogStream) (error) {
       logStream.LogEvents = append(logStream.LogEvents, newLogEvent)
     }
 
-    input.NextToken = ret.NextForwardToken
-    if input.NextToken == nil {
-      break
-    }
+    // input.NextToken = ret.NextForwardToken
+    // if input.NextToken == nil {
+    //   break
+    // }
+    break
   }
 
 
