@@ -94,6 +94,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     case key.Matches(msg, m.keymap.Select):
       group, ok := m.listGroups.SelectedItem().(models.LogGroup)
       if ok {
+        (*m.ctx.Cloud).UpdateLogStreams(&group, false)
         var items []list.Item
         for _, stream := range group.Streams {
           items = append(items, stream)
@@ -105,6 +106,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
       stream, ok := m.listGroups.SelectedItem().(models.LogStream)
       if ok {
+        (*m.ctx.Cloud).UpdateLogEvents(&stream)
         m.viewport.SetContent(m.renderViewport(&stream))
         return m, nil
       }
@@ -163,7 +165,7 @@ func (m *Model) refresh() (tea.Cmd) {
   return func () (tea.Msg) {
     var items []list.Item
 
-    logGroups, err :=  (*m.ctx.Cloud).ListLogGroups(true)
+    logGroups, err :=  (*m.ctx.Cloud).ListLogGroups(false, false)
     if err != nil {
       fmt.Printf("%s", err) // TODO: Implement error message
       return items

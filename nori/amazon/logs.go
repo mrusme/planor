@@ -11,7 +11,7 @@ import (
   "github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
 )
 
-func (cloud *Amazon) ListLogGroups(updateEvents bool) ([]models.LogGroup, error) {
+func (cloud *Amazon) ListLogGroups(updateStreams bool, updateEvents bool) ([]models.LogGroup, error) {
   input := cloudwatchlogs.DescribeLogGroupsInput{
     Limit: aws.Int32(50),
     NextToken: nil,
@@ -32,9 +32,11 @@ func (cloud *Amazon) ListLogGroups(updateEvents bool) ([]models.LogGroup, error)
         SizeBytes: *logGroup.StoredBytes,
       }
 
-      err := cloud.UpdateLogStreams(&newLogGroup, updateEvents)
-      if err != nil {
-        return nil, err
+      if updateStreams == true {
+        err := cloud.UpdateLogStreams(&newLogGroup, updateEvents)
+        if err != nil {
+          return nil, err
+        }
       }
 
       logGroups = append(logGroups, newLogGroup)
