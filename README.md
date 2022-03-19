@@ -38,6 +38,8 @@ following cloud service providers and cloud services:
   - Elastic Cloud Compute
   - CodePipeline
   - CloudWatch Logs
+- Vultr
+  - Cloud Instances
 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ```
@@ -101,6 +103,7 @@ The keyboard shortcuts are:
        r: Refresh
      C-p: Previous tab/service
      C-n: Next tab/service
+  F1-F12: Switch to tab <nr>
      tab: Switch focus
        k: Move up in list
        j: Move down in list
