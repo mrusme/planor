@@ -80,9 +80,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
     case key.Matches(msg, m.keymap.PrevTab):
       m.nav.PrevTab()
+      return m, nil
 
     case key.Matches(msg, m.keymap.NextTab):
       m.nav.NextTab()
+      return m, nil
 
     }
 
