@@ -62,8 +62,8 @@ func NewModel(ctx *uictx.Ctx) Model {
     ctx: ctx,
   }
 
-  for _, navTitle := range (*ctx.Cloud).GetCapabilities() {
-    Navigation = append(Navigation, navTitle)
+  for _, capability := range (*ctx.Cloud).GetCapabilities() {
+    Navigation = append(Navigation, capability.Name)
   }
 
   m.spinner = spinner.New()

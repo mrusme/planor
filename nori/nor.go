@@ -3,13 +3,17 @@ package nori
 import (
   "errors"
   "github.com/mrusme/planor/nori/models"
+  "github.com/mrusme/planor/nori/adapter"
   "github.com/mrusme/planor/nori/amazon"
 )
 
 type Nor interface {
-  GetCapabilities() (map[string]string)
+  GetCapabilities() ([]adapter.Capability)
 
   LoadProfile(profile *string) (error)
+
+  ListInstances() ([]models.Instance, error)
+
   ListPipelines() ([]models.Pipeline, error)
 
   ListLogGroups(updateStreams bool, updateEvents bool) ([]models.LogGroup, error)

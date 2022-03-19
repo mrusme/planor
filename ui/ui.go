@@ -1,12 +1,13 @@
 package ui
 
 import (
-  "fmt"
+  // "fmt"
   "strings"
   "github.com/mrusme/planor/ui/navigation"
   "github.com/mrusme/planor/ui/uictx"
 
   "github.com/mrusme/planor/ui/views"
+  "github.com/mrusme/planor/ui/views/instances"
   "github.com/mrusme/planor/ui/views/ci"
   "github.com/mrusme/planor/ui/views/logs"
 
@@ -125,8 +126,10 @@ func NewModel(ctx *uictx.Ctx) Model {
   }
 
   m.nav = navigation.NewModel(m.ctx)
-  for capability := range (*m.ctx.Cloud).GetCapabilities() {
-    switch capability {
+  for _, capability := range (*m.ctx.Cloud).GetCapabilities() {
+    switch capability.ID {
+    case "instances":
+      m.views = append(m.views, instances.NewModel(m.ctx))
     case "ci":
       m.views = append(m.views, ci.NewModel(m.ctx))
     case "logs":
@@ -209,9 +212,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     case key.Matches(msg, m.keymap.NextTab):
       m.nav.NextTab()
       return m, nil
-
-    default:
-      fmt.Printf("%v", msg.Runes)
     }
 
   case tea.WindowSizeMsg:
