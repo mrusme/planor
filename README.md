@@ -35,6 +35,7 @@ Planor is a text user interface for cloud services. It currently supports the
 following cloud service providers and cloud services:
 
 - Amazon Web Services (AWS)
+  - Elastic Cloud Compute
   - CodePipeline
   - CloudWatch Logs
 
