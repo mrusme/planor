@@ -128,6 +128,16 @@ func max(a, b int) int {
   return b
 }
 
+func (m* Model) NthTab(nth int) {
+  if nth > len(Navigation) {
+    nth = len(Navigation)
+  } else if nth < 1 {
+    nth = 1
+  }
+
+  m.CurrentId = nth - 1
+}
+
 func (m *Model) PrevTab() {
   m.CurrentId--
 
