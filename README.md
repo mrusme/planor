@@ -31,7 +31,7 @@
 
 
 
-Planar is a text user interface for cloud services. It currently supports the
+Planor is a text user interface for cloud services. It currently supports the
 following cloud service providers and cloud services:
 
 - Amazon Web Services (AWS)
