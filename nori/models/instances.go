@@ -7,6 +7,15 @@ import (
 type Instance struct {
   ID              string
   Name            string
+
+  Type            string
+  Architecture    string
+  CPUCores        int
+  CPUThreads      int
+
+  Image           string
+  IPv4            string
+  IPv6            string
 }
 
 func (instance Instance) FilterValue() (string) {

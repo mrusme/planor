@@ -29,6 +29,21 @@ func (cloud *Amazon) ListInstances() ([]models.Instance, error) {
         newInstance := models.Instance{
           ID: *instance.InstanceId,
           Name: *instance.InstanceId,
+
+          Type: string(instance.InstanceType),
+          Architecture: string(instance.Architecture),
+          CPUCores: int(*instance.CpuOptions.CoreCount),
+          CPUThreads: int(*instance.CpuOptions.ThreadsPerCore),
+
+          Image: *instance.ImageId,
+        }
+
+        if instance.PublicIpAddress != nil {
+          newInstance.IPv4 = *instance.PublicIpAddress
+        }
+
+        if instance.Ipv6Address != nil {
+          newInstance.IPv6 = *instance.Ipv6Address
         }
 
         instances = append(instances, newInstance)

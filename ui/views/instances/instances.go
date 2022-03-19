@@ -191,5 +191,22 @@ func (m *Model) renderViewport(instance *models.Instance) (string) {
     instance.Name,
   )
 
+  vp = fmt.Sprintf(
+    "%s\nType: %s\nArchiecture: %s\n%d Cores, %d Threads per Core\n",
+    vp,
+    instance.Type,
+    instance.Architecture,
+    instance.CPUCores,
+    instance.CPUThreads,
+  )
+
+  vp = fmt.Sprintf(
+    "%s\nImage: %s\nIPv4: %s\nIPv6: %s\n",
+    vp,
+    instance.Image,
+    instance.IPv4,
+    instance.IPv6,
+  )
+
   return vp
 }
