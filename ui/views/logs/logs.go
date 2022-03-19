@@ -14,6 +14,16 @@ import (
 )
 
 var (
+  listStyle = lipgloss.NewStyle().
+    Margin(0, 0, 0, 0).
+    Padding(1, 1).
+    Border(lipgloss.RoundedBorder()).
+    BorderForeground(lipgloss.Color("#874BFD")).
+    BorderTop(true).
+    BorderLeft(true).
+    BorderRight(true).
+    BorderBottom(true)
+
   viewportStyle = lipgloss.NewStyle().
     Margin(0, 0, 0, 0).
     Padding(1, 1).
@@ -74,6 +84,7 @@ func NewModel(ctx *uictx.Ctx) (Model) {
 
   m.listGroups = list.New(m.items, list.NewDefaultDelegate(), 0, 0)
   m.listGroups.Title = "Groups"
+
   m.ctx = ctx
 
   return m
@@ -124,19 +135,23 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     }
 
   case tea.WindowSizeMsg:
-    listGroupsWidth := int(math.Floor(float64(m.ctx.Content[0]) / 4.0))
-    viewportWidth := m.ctx.Content[0] - listGroupsWidth
-    viewportHeight := m.ctx.Content[1] - 6
+    listWidth := int(math.Floor(float64(m.ctx.Content[0]) / 4.0))
+    listHeight := m.ctx.Content[1] - 1
+    viewportWidth := m.ctx.Content[0] - listWidth - 4
+    viewportHeight := m.ctx.Content[1] - 1
 
+    listStyle.Width(listWidth)
+    listStyle.Height(listHeight)
     m.listGroups.SetSize(
-      listGroupsWidth,
-      m.ctx.Content[1],
+      listWidth - 2,
+      listHeight - 2,
     )
 
     viewportStyle.Width(viewportWidth)
     viewportStyle.Height(viewportHeight)
+    m.viewport = viewport.New(viewportWidth - 4, viewportHeight - 4)
     m.viewport.Width =  viewportWidth - 4
-    m.viewport.Height = viewportHeight
+    m.viewport.Height = viewportHeight - 4
     // cmds = append(cmds, viewport.Sync(m.viewport))
 
   case []list.Item:
@@ -148,10 +163,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
   var cmd tea.Cmd
 
   if m.focused == 0 {
+    listStyle.BorderForeground(lipgloss.Color("#FFFFFF"))
     viewportStyle.BorderForeground(lipgloss.Color("#874BFD"))
     m.listGroups, cmd = m.listGroups.Update(msg)
     cmds = append(cmds, cmd)
   } else if m.focused == 1 {
+    listStyle.BorderForeground(lipgloss.Color("#874BFD"))
     viewportStyle.BorderForeground(lipgloss.Color("#FFFFFF"))
     m.viewport, cmd = m.viewport.Update(msg)
     cmds = append(cmds, cmd)
@@ -165,7 +182,7 @@ func (m Model) View() (string) {
 
   view = lipgloss.JoinHorizontal(
     lipgloss.Top,
-    m.listGroups.View(),
+    listStyle.Render(m.listGroups.View()),
     viewportStyle.Render(m.viewport.View()),
   )
 

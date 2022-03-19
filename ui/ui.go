@@ -90,6 +90,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
   case tea.WindowSizeMsg:
     m.setSizes(msg.Width, msg.Height)
+    for i := range m.views {
+      v, cmd := m.views[i].Update(msg)
+      m.views[i] = v
+      cmds = append(cmds, cmd)
+    }
   }
 
   v, cmd := m.views[m.nav.CurrentId].Update(msg)
