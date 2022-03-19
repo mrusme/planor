@@ -7,6 +7,8 @@ import (
 )
 
 type Nor interface {
+  GetCapabilities() (map[string]string)
+
   LoadProfile(profile *string) (error)
   ListPipelines() ([]models.Pipeline, error)
 

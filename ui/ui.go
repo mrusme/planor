@@ -59,8 +59,14 @@ func NewModel(ctx *uictx.Ctx) Model {
   }
 
   m.nav = navigation.NewModel(m.ctx)
-  m.views = append(m.views, ci.NewModel(m.ctx))
-  m.views = append(m.views, logs.NewModel(m.ctx))
+  for capability := range (*m.ctx.Cloud).GetCapabilities() {
+    switch capability {
+    case "ci":
+      m.views = append(m.views, ci.NewModel(m.ctx))
+    case "logs":
+      m.views = append(m.views, logs.NewModel(m.ctx))
+    }
+  }
 
   return m
 }

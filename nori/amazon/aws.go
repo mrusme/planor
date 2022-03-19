@@ -32,3 +32,11 @@ func (cloud *Amazon) LoadClients() (error) {
   return nil
 }
 
+func (cloud *Amazon) GetCapabilities() (map[string]string) {
+  cap := make(map[string]string)
+
+  cap["ci"]   = "CodePipeline"
+  cap["logs"] = "CloudWatch Logs"
+
+  return cap
+}

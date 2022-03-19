@@ -48,10 +48,7 @@ var (
     BorderRight(false)
 )
 
-var Navigation = []string{
-  "Continuous Integraion",
-  "Logging",
-}
+var Navigation = []string{}
 
 type Model struct {
   CurrentId             int
@@ -63,6 +60,10 @@ func NewModel(ctx *uictx.Ctx) Model {
   m := Model{
     CurrentId: 0,
     ctx: ctx,
+  }
+
+  for _, navTitle := range (*ctx.Cloud).GetCapabilities() {
+    Navigation = append(Navigation, navTitle)
   }
 
   m.spinner = spinner.New()
