@@ -17,7 +17,7 @@ func main() {
   var cloudProfile = "dev.verifyplus"
 
   flag.StringVar(&cloudProvider, "c", "aws", "cloud provider: aws, vultr")
-  flag.StringVar(&cloudProfile, "p", "", "cloud profile / API key env variable")
+  flag.StringVar(&cloudProfile, "p", "", "aws profile name, vultr api key env variable name")
   flag.Parse()
 
   if cloudProvider == "" || cloudProfile == "" {
