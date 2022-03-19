@@ -49,8 +49,8 @@ var (
 )
 
 var Navigation = []string{
-  "CI",
-  "Logs",
+  "Continuous Integraion",
+  "Logging",
 }
 
 type Model struct {

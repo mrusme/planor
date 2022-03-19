@@ -28,6 +28,7 @@ var (
 type KeyMap struct {
     Refresh       key.Binding
     Select        key.Binding
+    GoBack        key.Binding
     SwitchFocus   key.Binding
 }
 
@@ -39,6 +40,10 @@ var DefaultKeyMap = KeyMap{
   Select: key.NewBinding(
     key.WithKeys("enter"),
     key.WithHelp("enter", "select"),
+  ),
+  GoBack: key.NewBinding(
+    key.WithKeys("backspace"),
+    key.WithHelp("backspace", "go back"),
   ),
   SwitchFocus: key.NewBinding(
     key.WithKeys("tab"),
@@ -82,6 +87,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     switch {
     case key.Matches(msg, m.keymap.Refresh):
       m.ctx.Loading = true
+      m.listGroups.Title = "Groups"
       cmds = append(cmds, m.refresh())
 
     case key.Matches(msg, m.keymap.SwitchFocus):
@@ -91,9 +97,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
       }
       // return m, nil
 
+    case key.Matches(msg, m.keymap.GoBack):
+      m.listGroups.SetItems(m.items)
+      return m, nil
+
     case key.Matches(msg, m.keymap.Select):
       group, ok := m.listGroups.SelectedItem().(models.LogGroup)
       if ok {
+        m.listGroups.Title = "Streams"
         (*m.ctx.Cloud).UpdateLogStreams(&group, false)
         var items []list.Item
         for _, stream := range group.Streams {
