@@ -62,9 +62,11 @@ $ go install
 RUNNING
 -------
 
-Make sure to have the cloud provider profile configured.
+Make sure to have the cloud provider profile configured and upon launching 
+planor press r to refresh the data.
 
-For AWS:
+
+=== Amazon Web Services ===
 
 Create ~/.aws/config and add your profile, e.g.:
 
@@ -84,7 +86,13 @@ Then run planor and specify the cloud service and profile name:
 $ planor -c aws -p captain-baloo
 
 
-Press r to begin refreshing the data.
+=== Vultr ===
+
+Run planor and specify the environment variable that holds the Vultr API key as
+profile:
+
+$ export VULTR_API_KEY='...'
+$ planor -c vultr -p VULTR_API_KEY
 
 
 
