@@ -36,6 +36,7 @@ func (cloud *Amazon) ListInstances() ([]models.Instance, error) {
           CPUThreads: int(*instance.CpuOptions.ThreadsPerCore),
 
           Image: *instance.ImageId,
+          Status: string(instance.State.Name),
         }
 
         if instance.PublicIpAddress != nil {

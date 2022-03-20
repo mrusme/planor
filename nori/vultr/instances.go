@@ -32,6 +32,8 @@ func (cloud *Vultr) ListInstances() ([]models.Instance, error) {
       Image: instance.ImageID,
       IPv4: instance.MainIP,
       IPv6: instance.V6MainIP,
+
+      Status: instance.Status,
     }
 
     instances = append(instances, newInstance)
