@@ -16,6 +16,8 @@ type Instance struct {
   Image           string
   IPv4            string
   IPv6            string
+
+  Status          string
 }
 
 func (instance Instance) FilterValue() (string) {

@@ -187,8 +187,9 @@ func (m *Model) renderViewport(instance *models.Instance) (string) {
   var vp string = ""
 
   vp = fmt.Sprintf(
-    "%s\n",
+    "%s\nStatus: %s\n",
     instance.Name,
+    instance.Status,
   )
 
   vp = fmt.Sprintf(

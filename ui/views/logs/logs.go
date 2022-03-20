@@ -3,6 +3,8 @@ package logs
 import (
   "fmt"
   "math"
+  "strings"
+  "unicode"
 
   "github.com/charmbracelet/bubbles/key"
   "github.com/charmbracelet/bubbles/list"
@@ -210,10 +212,17 @@ func (m *Model) renderViewport(logStream *models.LogStream) (string) {
   var vp string = ""
 
   for _, event := range logStream.LogEvents {
+    cleaned := strings.Map(func(r rune) rune {
+      if unicode.IsPrint(r) && r != '\\' {
+        return r
+      }
+      return -1
+    }, event.Message)
+
     vp = fmt.Sprintf(
       "%s%s\n",
       vp,
-      event.Message,
+      cleaned,
     )
   }
 

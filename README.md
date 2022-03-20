@@ -40,6 +40,9 @@ following cloud service providers and cloud services:
   - CloudWatch Logs
 - Vultr
   - Cloud Instances
+- Heroku
+  - Dynos
+  - Builds
 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ```
@@ -93,6 +96,15 @@ profile:
 
 $ export VULTR_API_KEY='...'
 $ planor -c vultr -p VULTR_API_KEY
+
+
+=== Heroku ===
+
+Run planor and specify the environment variable that holds the Heroku API key as
+profile:
+
+$ export HEROKU_API_KEY='...'
+$ planor -c heroku -p HEROKU_API_KEY
 
 
 

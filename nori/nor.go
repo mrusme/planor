@@ -7,6 +7,7 @@ import (
 
   "github.com/mrusme/planor/nori/amazon"
   "github.com/mrusme/planor/nori/vultr"
+  "github.com/mrusme/planor/nori/heroku"
 )
 
 type Nor interface {
@@ -32,6 +33,8 @@ func New(cloudType *string, profile *string) (Nor, error) {
     cloud = new(amazon.Amazon)
   case "vultr":
     cloud = new(vultr.Vultr)
+  case "heroku":
+    cloud = new(heroku.Heroku)
   }
 
   err := cloud.LoadProfile(profile)
