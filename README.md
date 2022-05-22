@@ -43,6 +43,8 @@ following cloud service providers and cloud services:
 - Heroku
   - Dynos
   - Builds
+- Render.com
+  - Services (+ deploys states)
 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ```
@@ -105,6 +107,15 @@ profile:
 
 $ export HEROKU_API_KEY='...'
 $ planor -c heroku -p HEROKU_API_KEY
+
+
+=== Render ===
+
+Run planor and specify the environment variable that holds the Render API key as
+profile:
+
+$ export RENDER_API_KEY='...'
+$ planor -c render -p RENDER_API_KEY
 
 
 
