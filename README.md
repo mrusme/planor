@@ -45,6 +45,8 @@ following cloud service providers and cloud services:
   - Builds
 - Render.com
   - Services (+ deploys states)
+- Fleek
+  - Sites
 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ```
@@ -114,6 +116,16 @@ $ planor -c heroku -p HEROKU_API_KEY
 Run planor and specify the environment variable that holds the Render API key as
 profile:
 
+$ export RENDER_API_KEY='...'
+$ planor -c render -p RENDER_API_KEY
+
+
+=== Fleek ===
+
+Run planor and specify the environment variable that holds the Fleek API key as
+profile, and export the Fleek Team ID as environment variable as well:
+
+$ export FLEEK_TEAM_ID='my-team'
 $ export RENDER_API_KEY='...'
 $ planor -c render -p RENDER_API_KEY
 

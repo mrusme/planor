@@ -9,6 +9,7 @@ import (
   "github.com/mrusme/planor/nori/vultr"
   "github.com/mrusme/planor/nori/heroku"
   "github.com/mrusme/planor/nori/render"
+  "github.com/mrusme/planor/nori/fleek"
 )
 
 type Nor interface {
@@ -38,6 +39,8 @@ func New(cloudType *string, profile *string) (Nor, error) {
     cloud = new(heroku.Heroku)
   case "render":
     cloud = new(render.Render)
+  case "fleek":
+    cloud = new(fleek.Fleek)
   default:
     return nil, errors.New("No such cloud")
   }
