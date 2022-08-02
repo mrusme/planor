@@ -1,5 +1,6 @@
 Planor
 ======
+[![license](http://img.shields.io/badge/license-GPLv3-red.svg?style=flat)](https://raw.githubusercontent.com/mrusme/go-fleek/master/LICENSE)
 
 ```
 
@@ -45,12 +46,15 @@ following cloud service providers and cloud services:
 - Heroku
   - [x] Dynos
   - [x] Builds
+  - [ ] Logs
 - Render.com
   - [x] Services (+ deploys states)
+  - [ ] Logs
 - Fleek
   - [x] Sites
+  - [ ] Logs
 
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+---
 
 ![Continuous Integration](screen-ci.png)
 ![Logging](screen-logs.png)
