@@ -92,6 +92,8 @@ Then run planor and specify the cloud service and profile name:
 
 $ planor -c aws -p captain-baloo
 
+Library: https://github.com/aws/aws-sdk-go-v2
+
 
 === Vultr ===
 
@@ -100,6 +102,8 @@ profile:
 
 $ export VULTR_API_KEY='...'
 $ planor -c vultr -p VULTR_API_KEY
+
+Library: https://github.com/vultr/govultr
 
 
 === Heroku ===
@@ -110,6 +114,8 @@ profile:
 $ export HEROKU_API_KEY='...'
 $ planor -c heroku -p HEROKU_API_KEY
 
+Library: https://github.com/heroku/heroku-go
+
 
 === Render ===
 
@@ -118,6 +124,8 @@ profile:
 
 $ export RENDER_API_KEY='...'
 $ planor -c render -p RENDER_API_KEY
+
+Library: https://github.com/mrusme/go-render
 
 
 === Fleek ===
@@ -129,6 +137,7 @@ $ export FLEEK_TEAM_ID='my-team'
 $ export RENDER_API_KEY='...'
 $ planor -c render -p RENDER_API_KEY
 
+Library: https://github.com/mrusme/go-fleek
 
 
 CONFIGURATION
