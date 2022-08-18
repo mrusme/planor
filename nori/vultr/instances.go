@@ -3,6 +3,8 @@ package vultr
 import (
   "context"
   // "errors"
+  "fmt"
+  "strings"
 
   "github.com/mrusme/planor/nori/models"
 
@@ -24,16 +26,38 @@ func (cloud *Vultr) ListInstances() ([]models.Instance, error) {
       ID: instance.ID,
       Name: instance.Label,
 
+      Region: instance.Region,
+
       Type: instance.Plan,
       Architecture: instance.Plan,
       CPUCores: instance.VCPUCount,
-      CPUThreads: 0,
+      CPUThreads: 1,
 
+      RAMSize: instance.RAM,
+      DiskSize: instance.Disk,
+
+      OS: instance.Os,
       Image: instance.ImageID,
-      IPv4: instance.MainIP,
-      IPv6: instance.V6MainIP,
 
-      Status: instance.Status,
+      InternalIPv4: instance.InternalIP,
+
+      IPv4: instance.MainIP,
+      NetmaskV4: instance.NetmaskV4,
+      GatewayV4: instance.GatewayV4,
+
+      IPv6: instance.V6MainIP,
+      NetworkV6: instance.V6Network,
+      NetsizeV6: instance.V6NetworkSize,
+
+      TransferLimit: instance.AllowedBandwidth,
+      Info: strings.Join(instance.Features, ", "),
+      Status: fmt.Sprintf(
+        "%s\nPower: %s\nServer: %s",
+        instance.Status,
+        instance.PowerStatus,
+        instance.ServerStatus,
+      ),
+      VNC: instance.KVM,
     }
 
     instances = append(instances, newInstance)
