@@ -187,10 +187,33 @@ func (m *Model) renderViewport(instance *models.Instance) (string) {
   var vp string = ""
 
   vp = fmt.Sprintf(
-    "%s\nStatus: %s\n",
+    "%s\n",
     instance.Name,
-    instance.Status,
   )
+
+  if len(instance.Region) > 0 {
+    vp = fmt.Sprintf(
+      "%sRegion: %s\n",
+      vp,
+      instance.Region,
+    )
+  }
+
+  if len(instance.Info) > 0 {
+    vp = fmt.Sprintf(
+      "%sInfo: %s\n",
+      vp,
+      instance.Info,
+    )
+  }
+
+  if len(instance.Status) > 0 {
+    vp = fmt.Sprintf(
+      "%sStatus: %s\n",
+      vp,
+      instance.Status,
+    )
+  }
 
   vp = fmt.Sprintf(
     "%s\nType: %s\nArchiecture: %s\n%d Cores, %d Threads per Core\n",
@@ -201,13 +224,99 @@ func (m *Model) renderViewport(instance *models.Instance) (string) {
     instance.CPUThreads,
   )
 
-  vp = fmt.Sprintf(
-    "%s\nImage: %s\nIPv4: %s\nIPv6: %s\n",
-    vp,
-    instance.Image,
-    instance.IPv4,
-    instance.IPv6,
-  )
+  if len(instance.Hypervisor) > 0 {
+    vp = fmt.Sprintf(
+      "%sHypervisor: %s\n",
+      vp,
+      instance.Hypervisor,
+    )
+  }
+
+  vp = fmt.Sprintf("%s\n", vp)
+
+  if instance.RAMSize > 0 {
+    vp = fmt.Sprintf(
+      "%sRAM: %d MB\n",
+      vp,
+      instance.RAMSize,
+    )
+  }
+
+  if instance.DiskSize > 0 {
+    vp = fmt.Sprintf(
+      "%sDisk: %d GB\n",
+      vp,
+      instance.DiskSize,
+    )
+  }
+
+  if len(instance.OS) > 0 {
+    vp = fmt.Sprintf(
+      "%sOS: %s\n",
+      vp,
+      instance.OS,
+    )
+  }
+
+  if len(instance.Image) > 0 {
+    vp = fmt.Sprintf(
+      "%sImage: %s\n",
+      vp,
+      instance.Image,
+    )
+  }
+
+  vp = fmt.Sprintf("%s\n", vp)
+
+  if len(instance.InternalIPv4) > 0 {
+    vp = fmt.Sprintf(
+      "%sInternal IPv4: %s\n",
+      vp,
+      instance.InternalIPv4,
+    )
+  }
+
+  vp = fmt.Sprintf("%s\n", vp)
+
+  if len(instance.IPv4) > 0 {
+    vp = fmt.Sprintf(
+      "%sIPv4: %s\nNetmask: %s\nGateway: %s\n",
+      vp,
+      instance.IPv4,
+      instance.NetmaskV4,
+      instance.GatewayV4,
+    )
+  }
+
+  vp = fmt.Sprintf("%s\n", vp)
+
+  if len(instance.IPv6) > 0 {
+    vp = fmt.Sprintf(
+      "%sIPv6: %s\nNetwork: %s\nSize: %d\n",
+      vp,
+      instance.IPv6,
+      instance.NetworkV6,
+      instance.NetsizeV6,
+    )
+  }
+
+  vp = fmt.Sprintf("%s\n", vp)
+
+  if instance.TransferLimit > 0 {
+    vp = fmt.Sprintf(
+      "%sTransfer limit: %d GB\n",
+      vp,
+      instance.TransferLimit,
+    )
+  }
+
+  /* if len(instance.VNC) > 0 {
+    vp = fmt.Sprintf(
+      "%sVNC: %s\n",
+      vp,
+      instance.VNC,
+    )
+  } */
 
   return vp
 }
