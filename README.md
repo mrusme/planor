@@ -1,5 +1,5 @@
 Planor
-======
+------
 [![license](http://img.shields.io/badge/license-GPLv3-red.svg?style=flat)](https://raw.githubusercontent.com/mrusme/go-fleek/master/LICENSE)
 
 ```
