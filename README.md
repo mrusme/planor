@@ -74,6 +74,15 @@ or
 go install
 ```
 
+### OpenBSD
+
+Planor is available through the `-current` and `-stable` ports on OpenBSD >=
+7.2. The package is being maintained by [gonzalo-](https://github.com/gonzalo-)
+(see [this issue](https://github.com/mrusme/planor/issues/2)) and can be 
+installed using the anoncvs ports checkout, see
+[here](https://www.openbsd.org/anoncvs.html#updating) and
+[here](https://www.openbsd.org/faq/ports/guide.html).
+
 
 ## Configuration
 
