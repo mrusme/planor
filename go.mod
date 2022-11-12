@@ -12,7 +12,7 @@ require (
 	github.com/charmbracelet/bubbletea v0.23.0
 	github.com/charmbracelet/lipgloss v0.6.0
 	github.com/heroku/heroku-go/v5 v5.5.0
-	github.com/mrusme/go-fleek v0.1.0
+	github.com/mrusme/go-fleek v0.1.1
 	github.com/mrusme/go-render v0.1.0
 	github.com/vultr/govultr/v2 v2.17.2
 	golang.org/x/oauth2 v0.2.0

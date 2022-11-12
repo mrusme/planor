@@ -364,6 +364,8 @@ github.com/mrusme/go-fleek v0.0.0-20220801232931-1fc6dd1e524b h1:KFSxGeb33M1DfXX
 github.com/mrusme/go-fleek v0.0.0-20220801232931-1fc6dd1e524b/go.mod h1:jtW0D5gqDA89HivUAd/fyPjReHpYsAbrwl0iLM0uyqI=
 github.com/mrusme/go-fleek v0.1.0 h1:GkvHIBeBkwR8JoOIWs5ehaCtfpBWvE3Y1sqqbJ/XcRI=
 github.com/mrusme/go-fleek v0.1.0/go.mod h1:jtW0D5gqDA89HivUAd/fyPjReHpYsAbrwl0iLM0uyqI=
+github.com/mrusme/go-fleek v0.1.1 h1:zX7kAERt/Z05DlyoT0OwMs77JXgXFTs5fXDkfJR0ttw=
+github.com/mrusme/go-fleek v0.1.1/go.mod h1:JH8/b5fM1X7WY8dkCcl2sSMGIEua4uHccsLAqtSCJG4=
 github.com/mrusme/go-render v0.0.0-20220522181051-6679dc7559c7 h1:W2icuSr/hPk7POKZTNqxEFVaz6nbFKcr/PjMJgqSGdI=
 github.com/mrusme/go-render v0.0.0-20220522181051-6679dc7559c7/go.mod h1:v8zUoMwWVC0pLhjsb17G8SlHVl/ZsJvP6kG1trj6DE0=
 github.com/mrusme/go-render v0.1.0 h1:6J13rCJdOewqeFKOzy9pp2gbanKHhkvijUa4oUZBgbc=
