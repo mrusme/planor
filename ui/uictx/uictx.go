@@ -1,22 +1,21 @@
 package uictx
 
 import (
-  "github.com/mrusme/planor/nori"
+	"github.com/mrusme/planor/nori"
 )
 
 type Ctx struct {
-  Screen          [2]int
-  Content         [2]int
-  Cloud           *nori.Nor
-  Loading         bool
+	Screen  [2]int
+	Content [2]int
+	Cloud   *nori.Nor
+	Loading bool
 }
 
-func New(cloud *nori.Nor) (Ctx) {
-  return Ctx{
-    Screen: [2]int{0, 0},
-    Content: [2]int{0, 0},
-    Cloud: cloud,
-    Loading: false,
-  }
+func New(cloud *nori.Nor) Ctx {
+	return Ctx{
+		Screen:  [2]int{0, 0},
+		Content: [2]int{0, 0},
+		Cloud:   cloud,
+		Loading: false,
+	}
 }
-

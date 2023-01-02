@@ -1,7 +1,6 @@
 package adapter
 
 type Capability struct {
-  ID              string
-  Name            string
+	ID   string
+	Name string
 }
-
