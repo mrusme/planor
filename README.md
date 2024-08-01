@@ -34,6 +34,9 @@ Planor
 
 ```
 
+[![Static 
+Badge](https://img.shields.io/badge/Join_on_Matrix-green?style=for-the-badge&logo=element&logoColor=%23ffffff&label=Chat&labelColor=%23333&color=%230DBD8B&link=https%3A%2F%2Fmatrix.to%2F%23%2F%2521PHlbgZTdrhjkCJrfVY%253Amatrix.org)](https://matrix.to/#/%21PHlbgZTdrhjkCJrfVY%3Amatrix.org)
+
 Planor is a text user interface for cloud services. It currently supports the
 following cloud service providers and cloud services:
 
